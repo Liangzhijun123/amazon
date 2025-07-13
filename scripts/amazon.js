@@ -1,3 +1,4 @@
+/*
 const products = [
   {
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -26,9 +27,21 @@ const products = [
     },
     priceCents: 799,
   },
+  {
+    image: 'https://picsum.photos/seed/picsum/200/300',
+     name: "2 Slot Toaster - Black",
+    rating: {
+      stars: 5,
+      count: 2197,
+    },
+    priceCents: 1899,
+  }
 ];
+*/
 
 // combine the products into html into variable
+// we getting products from data/products.js
+// so we don't need to define products here again
 let productsHtml = "";
 
 products.forEach((product) => {
