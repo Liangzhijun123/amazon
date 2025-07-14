@@ -1,3 +1,5 @@
+import {cart} from "../data/cart.js";
+
 // combine the products into html into variable
 // we getting products from data/products.js
 // so we don't need to define products here again
@@ -44,7 +46,7 @@ products.forEach((product) => {
 
     <div class="product-spacer"></div>
 
-    <div class="added-to-cart">
+    <div class="added-to-cart js-added-to-cart">
       <img src="images/icons/checkmark.png">
       Added
     </div>
@@ -76,7 +78,9 @@ document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
     const productName = button.dataset.productName;
     const productPrice = button.dataset.productPrice;
 
-    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
+    const quantitySelector = document.querySelector(
+      `.js-quantity-selector-${productId}`
+    );
     const quantity = Number(quantitySelector.value);
 
     let matchingItem;
@@ -89,7 +93,7 @@ document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
     });
 
     if (matchingItem) {
-      matchingItem.quantity += quantity
+      matchingItem.quantity += quantity;
     } else {
       cart.push({
         productId: productId,
@@ -102,10 +106,32 @@ document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
       cartQuantity += item.quantity;
     });
 
-    document.querySelector('.js-cartQuantity')
-      .innerHTML = cartQuantity;
+    document.querySelector(".js-cartQuantity").innerHTML = cartQuantity;
 
-    console.log("Cart updated:", productName, "price:", productPrice, 'cart quantity:', cartQuantity);
+    console.log(
+      "Cart updated:",
+      productName,
+      "price:",
+      productPrice,
+      "cart quantity:",
+      cartQuantity
+    );
+
+    const productContainer = button.closest(".product-container");
+    const addedToCart = productContainer.querySelector(".js-added-to-cart");
+    console.log(`Added to cart ${productId}`);
+    addedToCart.classList.add("active-button");
+
+    const addedToCartTimeouts = {};
+    // Clear previous timeout if it exists
+    if (addedToCartTimeouts[productId]) {
+      clearTimeout(addedToCartTimeouts[productId]);
+    }
+
+    // Set new timeout and store its ID
+    addedToCartTimeouts[productId] = setTimeout(() => {
+      addedToCart.classList.remove("active-button");
+      addedToCartTimeouts[productId] = null;
+    }, 2000);
   });
 });
-

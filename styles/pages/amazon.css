@@ -17,6 +17,17 @@
   grid-template-columns: repeat(8, 1fr);
 }
 
+.added-to-cart.js-added-to-cart {
+  display: none;
+  opacity: 0;
+}
+
+.added-to-cart.js-added-to-cart.active-button {
+  display: block;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
 /* @media is used to create responsive design (making the
    website look good on any screen size). This @media
    means when the screen width is 2000px or less, we
