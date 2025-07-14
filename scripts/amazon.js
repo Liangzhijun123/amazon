@@ -1,4 +1,5 @@
 import {cart} from "../data/cart.js";
+import {products} from "../data/products.js";
 
 // combine the products into html into variable
 // we getting products from data/products.js
