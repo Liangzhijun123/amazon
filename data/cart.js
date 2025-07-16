@@ -1,6 +1,17 @@
-export const cart = [];
+export const cart = [
+  {
+    productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+    quantity: 1,
+    priceCents: 1090,
+  },
+  {
+    productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+    quantity: 2,
+    priceCents: 2095,
+  },
+];
 
-export function addToCart(productId, quantity) {
+export function addToCart(productId, quantity, price) {
   let matchingItem;
 
   cart.forEach((cartItem) => {
@@ -12,10 +23,12 @@ export function addToCart(productId, quantity) {
 
   if (matchingItem) {
     matchingItem.quantity += quantity;
+    matchingItem.price += price;
   } else {
     cart.push({
       productId: productId,
       quantity: quantity,
+      price: price,
     });
   }
 }
