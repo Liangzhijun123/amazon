@@ -1,5 +1,6 @@
 import { cart , addToCart, updateCartQuantity, updateCartButton} from "../data/cart.js";
 import { products } from "../data/products.js";
+import { formatCurrenct } from "./utils/money.js";
 
 // combine the products into html into variable
 // we getting products from data/products.js
@@ -27,7 +28,7 @@ products.forEach((product) => {
     </div>
 
     <div class="product-price">
-      $${(product.priceCents / 100).toFixed(2)}
+      $${formatCurrenct(product.priceCents)}
     </div>
 
     <div class="product-quantity-container">
