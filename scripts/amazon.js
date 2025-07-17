@@ -2,6 +2,8 @@ import { cart , addToCart, updateCartQuantity, updateCartButton} from "../data/c
 import { products } from "../data/products.js";
 import { formatCurrenct } from "./utils/money.js";
 
+updateCartQuantity(); 
+
 // combine the products into html into variable
 // we getting products from data/products.js
 // so we don't need to define products here again
@@ -79,18 +81,15 @@ productsContainer.innerHTML = productsHtml;
 document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId;
-    const productName = button.dataset.productName;
-    const productPrice = button.dataset.productPrice;
+    const productPrice = Number(button.dataset.productPrice) * 100; // convert to cents if needed
 
+    // Get the selected quantity
     const quantitySelector = document.querySelector(
       `.js-quantity-selector-${productId}`
     );
     const quantity = Number(quantitySelector.value);
 
-    addToCart(productId,quantity, productPrice);
-
+    addToCart(productId, quantity, productPrice);
     updateCartQuantity();
-
-    updateCartButton();
   });
 });
