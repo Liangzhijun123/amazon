@@ -1,5 +1,5 @@
-import { cart } from "../data/cart.js";
-import {products} from "../data/products.js";
+import { cart, removeFromCart } from "../data/cart.js";
+import { products } from "../data/products.js";
 import { formatCurrenct } from "./utils/money.js";
 
 let cartSummaryHtml = "";
@@ -10,13 +10,13 @@ cart.forEach((cartItem) => {
   let matchingProduct;
 
   products.forEach((product) => {
-    if(product.id === productId) {
+    if (product.id === productId) {
       matchingProduct = product;
     }
-  })
+  });
 
-  cartSummaryHtml +=`
-   <div class="cart-item-container">
+  cartSummaryHtml += `
+   <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
       <div class="delivery-date">
         Delivery date: Tuesday, June 21
       </div>
@@ -39,9 +39,11 @@ cart.forEach((cartItem) => {
             <span class="update-quantity-link link-primary">
               Update
             </span>
-            <span class="delete-quantity-link link-primary">
-              Delete
-            </span>
+           <span 
+            class="delete-quantity-link link-primary js-delete-link"
+            data-product-id="${matchingProduct.id}">
+            Delete
+          </span>
           </div>
         </div>
 
@@ -98,3 +100,22 @@ console.log("Cart summary HTML:", cartSummaryHtml);
 
 const checkout = document.querySelector(".js-orderSummary");
 checkout.innerHTML = cartSummaryHtml;
+
+// delete link event listener
+document.querySelectorAll(".js-delete-link").forEach((link) => {
+  link.addEventListener("click", () => {
+    console.log("Delete link clicked");
+
+    const productId = link.dataset.productId;
+    console.log("Product ID to delete:", productId);
+
+    removeFromCart(productId);
+    console.log("Cart after deletion:", cart);
+
+    // Re-render the cart summary after deletion
+    const cartItemContainer = document.querySelector(`.js-cart-item-container-${productId}`);
+    console.log(cartItemContainer);
+    
+    cartItemContainer.remove();
+  });
+});
