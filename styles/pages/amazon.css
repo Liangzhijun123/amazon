@@ -2,6 +2,10 @@
   margin-top: 60px;
 }
 
+.quantity-input {
+  width: 30px;
+}
+
 .products-grid {
   display: grid;
 

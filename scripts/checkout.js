@@ -1,6 +1,8 @@
 import { cart, removeFromCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrenct } from "./utils/money.js";
+hello();
+console.log(dayjs());
 
 let cartSummaryHtml = "";
 
@@ -16,7 +18,7 @@ cart.forEach((cartItem) => {
   });
 
   cartSummaryHtml += `
-   <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
+ <div class="cart-item-container js-cart-item-container-${matchingProduct.id}" data-product-id="${matchingProduct.id}">
       <div class="delivery-date">
         Delivery date: Tuesday, June 21
       </div>
@@ -34,9 +36,9 @@ cart.forEach((cartItem) => {
           </div>
           <div class="product-quantity">
             <span>
-              Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+              Quantity: <input type="number" min="1" class="quantity-input input-quantity" value="${cartItem.quantity}" data-product-id="${matchingProduct.id}">
             </span>
-            <span class="update-quantity-link link-primary">
+            <span class="update-quantity-link link-primary js-update" data-product-id="${matchingProduct.id}">
               Update
             </span>
            <span 
@@ -101,6 +103,8 @@ console.log("Cart summary HTML:", cartSummaryHtml);
 const checkout = document.querySelector(".js-orderSummary");
 checkout.innerHTML = cartSummaryHtml;
 
+checkoutQuantity();
+
 // delete link event listener
 document.querySelectorAll(".js-delete-link").forEach((link) => {
   link.addEventListener("click", () => {
@@ -115,7 +119,51 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
     // Re-render the cart summary after deletion
     const cartItemContainer = document.querySelector(`.js-cart-item-container-${productId}`);
     console.log(cartItemContainer);
-    
+
     cartItemContainer.remove();
+
+    checkoutQuantity();
   });
+});
+
+export function checkoutQuantity() {
+  const checkoutQuantityElement = document.querySelector(".checkout-quantity");
+  // Sum all quantities in the cart
+  let totalQuantity = 0;
+  cart.forEach((cartItem) => {
+    totalQuantity += cartItem.quantity;
+  });
+  checkoutQuantityElement.innerText = `Checkout (${totalQuantity} items)`;
+}
+
+const updateButtons = document.querySelectorAll(".js-update");
+updateButtons.forEach((button) => {
+  button.addEventListener("click", function handler() {
+    const productId = button.dataset.productId;
+    const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
+
+    if (button.innerText === "Update") {
+      // Enable editing and change button to "Save"
+      input.removeAttribute("readonly");
+      input.focus();
+      button.innerText = "Save";
+    } else {
+      // Save the new quantity
+      const newQuantity = Number(input.value);
+      const cartItem = cart.find(item => item.productId === productId);
+      if (cartItem && newQuantity > 0) {
+        cartItem.quantity = newQuantity;
+        saveToStorage();
+        checkoutQuantity();
+        // Optionally, set input back to readonly and button back to "Update"
+        input.setAttribute("readonly", true);
+        button.innerText = "Update";
+      }
+    }
+  });
+});
+
+// Make all quantity inputs readonly by default
+document.querySelectorAll(".quantity-input").forEach(input => {
+  input.setAttribute("readonly", true);
 });
